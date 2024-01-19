@@ -14,9 +14,22 @@ import retrofit2.Response
 
 class MainActivity : AppCompatActivity() {
 
+    private lateinit var characterRepository: CharacterRepository
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
+
+        characterRepository = CharacterRepository(this)
+
+        // Ambil dan simpan data karakter
+        lifecycleScope.launch {
+            characterRepository.getAndSaveCharacters()
+
+            // Ambil data dari SharedPreferences
+            val characters = characterRepository.getCharactersFromSharedPreferences()
+            // Gunakan data karakter sesuai kebutuhan
+        }
 
 
         val bottomNav = findViewById<BottomNavigationView>(R.id.bottom_nav)
@@ -33,6 +46,8 @@ class MainActivity : AppCompatActivity() {
             }
             true
         }
+        // Pilih item secara programatik
+        bottomNav.selectedItemId = R.id.menu_1
 
     }
 

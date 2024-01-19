@@ -23,6 +23,12 @@ class HomeFragment : Fragment() {
     private var param1: String? = null
     private var param2: String? = null
 
+    private lateinit var characterRepository: CharacterRepository
+    private fun getDataFromSharedPreferences(): List<Character> {
+        return characterRepository.getCharactersFromSharedPreferences()
+    }
+
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         arguments?.let {
@@ -35,8 +41,44 @@ class HomeFragment : Fragment() {
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
+        characterRepository = CharacterRepository(requireContext())
         // Inflate the layout for this fragment
         return inflater.inflate(R.layout.fragment_home, container, false)
+    }
+
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
+
+
+        // Ambil data dari SharedPreferences
+        val characters = getDataFromSharedPreferences()
+
+        // Jika data tidak kosong, tampilkan nilai di TextView
+        if (characters.isNotEmpty()) {
+            val firstCharacter = characters.first() // Misalnya, mengambil karakter pertama
+            val secondCharacter = characters.getOrNull(1)
+            val thirdCharacter = characters.getOrNull(2)
+
+            // Inisialisasi TextView untuk setiap atribut
+            val textName = view.findViewById<TextView>(R.id.text_home61)
+            val textStatus = view.findViewById<TextView>(R.id.text_home7)
+            val textSpecies = view.findViewById<TextView>(R.id.text_home8)
+            val textGender = view.findViewById<TextView>(R.id.text_home9)
+
+            val textname1 = view.findViewById<TextView>(R.id.tv_name1)
+            val textname2 = view.findViewById<TextView>(R.id.tv_name2)
+            val textname3 = view.findViewById<TextView>(R.id.tv_name3)
+
+            // Set nilai pada TextView sesuai dengan atribut karakter
+            textName.text = "${firstCharacter.name}"
+            textStatus.text = "${firstCharacter.status}"
+            textSpecies.text = "${firstCharacter.species}"
+            textGender.text = "${firstCharacter.gender}"
+
+            textname1.text = "${firstCharacter?.name}"
+            textname2.text = "${secondCharacter?.name}"
+            textname3.text = "${thirdCharacter?.name}"
+        }
     }
 
     companion object {
